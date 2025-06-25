@@ -1,35 +1,23 @@
-<!DOCTYPE html>
-<html>
-<body>
-
 <?php
-$infodate = getdate();
-echo "<p>Salut PHP,nous sommes : " . $infodate['mday'] . "-" . $infodate['mon'] . "-" . $infodate['year']. " </p>";
+$config = [
+    "digest_alg" => "sha256",
+    "private_key_bits" => 2048,
+    "private_key_type" => OPENSSL_KEYTYPE_RSA,
+];
 
+// Generate the key pair
+$res = openssl_pkey_new($config);
 
-$now = new DateTime();
+// Extract private key
+openssl_pkey_export($res, $privateKey);
 
-echo $now ->format("Y-m-d H:i:s");
+// Extract public key
+$publicKeyDetails = openssl_pkey_get_details($res);
+$publicKey = $publicKeyDetails["key"];
 
-$currentH = (int) $now -> format("H");
+// Save to files
+file_put_contents("private.pem", $privateKey);
+file_put_contents("public.pem", $publicKey);
 
-if($currentH <12){
-
-	echo " <br> LE MATIN";
-    }else{
-    
-    echo "<br> APRES MIDI";
-    
-    }
-
-
-
-
-
-
-
-
+echo "Keys generated and saved.\n";
 ?>
-
-</body>
-</html>
